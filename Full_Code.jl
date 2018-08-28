@@ -110,6 +110,12 @@ plot(d, x = :indx, y = :loss, Geom.point, Scale.y_continuous(minvalue = minimum(
 Accuracy(w, xtrain, ytrain)
 Accuracy(w, xtest, ytest)
 
+# it's sometimes useful to plot the probabilities the model gives as density plot colored by outcome 
+# to see how well the model separates the classes and at which threshold 
+
+# d = DataFrame(yhat = sigm.(w[1] * xtest .+ w[2]][1, :], y = ytest[1, :])
+# plot(d, x = :yhat, color = :y, Geom.density, Scale.color_discrete_hue)
+
 ############### Decision Tree ####################
 using DecisionTree
 # prepare data 

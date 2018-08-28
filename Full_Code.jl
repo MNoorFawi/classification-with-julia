@@ -1,5 +1,5 @@
 
-using Knet, RDatasets, DataFrames, DecisionTree
+using Knet, RDatasets, DataFrames, Gadfly
 
 # read data
 data = readtable("bank-additional.csv", separator = ';');
@@ -111,6 +111,7 @@ Accuracy(w, xtrain, ytrain)
 Accuracy(w, xtest, ytest)
 
 ############### Decision Tree ####################
+using DecisionTree
 # prepare data 
 trfeatures = float.(xtrain');
 trlabels   = string.(ytrain');
@@ -125,7 +126,7 @@ TreePred = [DecisionTree.predict(model, tsfeatures[i, :]) for i in 1:size(tsfeat
 # measure accuracy on test data
 sum(TreePred .== tslabels) / length(tslabels)
 # get the probability of each label
-predProb = [predict_proba(model, trfeatures[i, :])[2] for i in 1:size(trfeatures, 1)];
+predProb = [DecisionTree.predict_proba(model, trfeatures[i, :])[2] for i in 1:size(trfeatures, 1)];
 
 # Random Forest using 7 random features, 10 trees, 0.9 portion of samples per tree, and a maximum tree depth of 6
 model = DecisionTree.build_forest(trlabels[:, 1], trfeatures, 2, 10, 0.5, 6)

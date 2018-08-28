@@ -14,7 +14,7 @@ atype = Array{Float32}; # atype = KnetArray{Float32} for gpu usage, Array{Float3
 
 # first change outcome variable y to 0 and 1, there are two methods
 # subscribe(x) = 1.0(x .== "yes") # one for yes
-data[:, :y] = map(Float64, data[:, :y] .== "yes");
+# data[:, :y] = map(Float64, data[:, :y] .== "yes");
 
 x = DataFrame();
 dataType = describe(data);

@@ -86,10 +86,10 @@ end;
 Accuracy(w, x, yreal) = sum((sign.(predict(w, x)) + 1) / 2 .== yreal) / length(yreal);
 
 # we then randomly splt the data to train and test data with 90:10 ratio
-split     = round(Int, 0.1 * size(x, 1));
-shuffle     = randperm(size(x, 1));
-xtrain, ytrain = map(atype, [Array(x[shuffle[split + 1:end], 1:end-1])', Array(x[shuffle[split + 1:end], end:end])']);
-xtest, ytest = map(atype, [Array(x[shuffle[1:split], 1:end-1])', Array(x[shuffle[1:split], end:end])']);
+splits = round(Int, 0.1 * size(x, 1));
+shuffled = randperm(size(x, 1));
+xtrain, ytrain = map(atype, [Array(x[shuffled[splits + 1:end], 1:end-1])', Array(x[shuffled[splits + 1:end], end:end])']);
+xtest, ytest = map(atype, [Array(x[shuffled[1:splits], 1:end-1])', Array(x[shuffled[1:splits], end:end])']);
 # check that both data are of the same distribution
 sum(ytrain) / length(ytrain), sum(ytest) / length(ytest)
 # size of each one

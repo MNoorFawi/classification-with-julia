@@ -32,7 +32,7 @@ for i in str
 end
 
 # we scale the Number columns except for the y variable 
-num2 = setdiff(num, [:y])
+num2 = setdiff(num, [:y]);
 d = DataFrame();
 for i in num2
 	d[:, i] = (data[:, i]- minimum(data[:, i])) / (maximum(data[:, i]) - minimum(data[:, i]))
@@ -48,7 +48,7 @@ end
 # applycol!(col -> col ./ sum(col), df)
 
 # then we combine everything together 
-x = hcat(x, d) 
+x = hcat(x, d); 
 x[:y] = map(Float64, data[:, :y] .== "yes");
 
 size(x)
@@ -104,8 +104,8 @@ Accuracy(w, xtest, ytest)
 # train the model 
 w, Loss = train(w, btrain; epochs = 30, lr = 1e-2);
 # plot how the Loss has been decreasing 
-d = DataFrame(indx = [i for i in 1:length(Loss)], loss = Loss)
-plot(d, x = :indx, y = :loss, Geom.point, Scale.y_continuous(minvalue = minimum(Loss), maxvalue = maximum(Loss)))
+d = DataFrame(epoch = [i for i in 1:length(Loss)], loss = Loss);
+plot(d, x = :epoch, y = :loss, Geom.point, Scale.y_continuous(minvalue = minimum(Loss), maxvalue = maximum(Loss)))
 # accuracy in train and test data
 Accuracy(w, xtrain, ytrain)
 Accuracy(w, xtest, ytest)
@@ -113,7 +113,7 @@ Accuracy(w, xtest, ytest)
 # it's sometimes useful to plot the probabilities the model gives as density plot colored by outcome 
 # to see how well the model separates the classes and at which threshold 
 
-# d = DataFrame(yhat = sigm.(w[1] * xtest .+ w[2]][1, :], y = ytest[1, :])
+# d = DataFrame(yhat = sigm.(w[1] * xtest .+ w[2])[1, :], y = ytest[1, :])
 # plot(d, x = :yhat, color = :y, Geom.density, Scale.color_discrete_hue)
 
 ############### Decision Tree ####################
@@ -137,8 +137,8 @@ predProb = [DecisionTree.predict_proba(model, trfeatures[i, :])[2] for i in 1:si
 # Random Forest using 7 random features, 10 trees, 0.9 portion of samples per tree, and a maximum tree depth of 6
 model = DecisionTree.build_forest(trlabels[:, 1], trfeatures, 2, 10, 0.5, 6)
 # predict labels and examine accuracy on test data
-forestPred = [apply_forest(model, tsfeatures[i, :]) for i in 1:size(tsfeatures, 1)]
+forestPred = [apply_forest(model, tsfeatures[i, :]) for i in 1:size(tsfeatures, 1)];
 sum(forestPred .== tslabels) / length(tslabels)
 # get the probability of each label
-[apply_forest_proba(model, tsfeatures[i, :], ["0.0", "1.0"]) for i in 1:size(tsfeatures, 1)]
+forestProb = [apply_forest_proba(model, tsfeatures[i, :], ["0.0", "1.0"]) for i in 1:size(tsfeatures, 1)];
 

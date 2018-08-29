@@ -146,11 +146,14 @@ println("")
 # get the probability of each label
 # predProb = [DecisionTree.predict_proba(model, trfeatures[i, :])[2] for i in 1:size(trfeatures, 1)];
 
-# Random Forest using 7 random features, 10 trees, 0.9 portion of samples per tree, and a maximum tree depth of 6
-# model = DecisionTree.build_forest(trlabels[:, 1], trfeatures, 2, 10, 0.5, 6)
+println("######### Random Forest #########")
+println("")
+println("# Random Forest using 5 random features, 10 trees, 0.7 portion of samples per tree, and a maximum tree depth of 6")
+model = DecisionTree.build_forest(trlabels[:, 1], trfeatures, 5, 10, 0.7, 6)
 # predict labels and examine accuracy on test data
-# forestPred = [apply_forest(model, tsfeatures[i, :]) for i in 1:size(tsfeatures, 1)];
-# sum(forestPred .== tslabels) / length(tslabels)
+forestPred = [apply_forest(model, tsfeatures[i, :]) for i in 1:size(tsfeatures, 1)];
+println("# Model accuracy on test data")
+println(sum(forestPred .== tslabels) / length(tslabels))
 # get the probability of each label
 # forestProb = [apply_forest_proba(model, tsfeatures[i, :], ["0.0", "1.0"]) for i in 1:size(tsfeatures, 1)];
 

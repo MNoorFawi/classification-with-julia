@@ -113,7 +113,7 @@ w, Loss = train(w, btrain; epochs = 30, lr = 1e-2);
 d = DataFrame(epoch = [i for i in 1:length(Loss)], loss = Loss);
 lossPlot = plot(d, x = :epoch, y = :loss, Geom.point, Scale.y_continuous(minvalue = minimum(Loss), maxvalue = maximum(Loss)))
 draw(PNG("loss_plot.png", 6inch, 5inch), lossPlot)
-println("N.B. a loss plot has been saved into your directory")
+println("# N.B. a loss plot has been saved into your directory")
 println("")
 println("# accuracy in train and test data")
 println(Accuracy(w, xtrain, ytrain))

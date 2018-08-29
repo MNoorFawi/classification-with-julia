@@ -7,6 +7,7 @@ println("# Data Description")
 println(describe(data))
 
 println("########## Knet Logistic Regression ##############")
+println("")
 atype = Array{Float32}; # atype = KnetArray{Float32} for gpu usage, Array{Float32} for cpu. 
 
 # there are lots of String and Number columns that need to be encoded 
@@ -53,6 +54,7 @@ x = hcat(x, d);
 x[:y] = map(Float64, data[:, :y] .== "yes");
 println("# Encoded data size")
 println(size(x))
+println("")
 
 # then we define our model;
 # the model equation
@@ -91,16 +93,19 @@ splits = round(Int, 0.1 * size(x, 1));
 shuffled = randperm(size(x, 1));
 xtrain, ytrain = map(atype, [Array(x[shuffled[splits + 1:end], 1:end-1])', Array(x[shuffled[splits + 1:end], end:end])']);
 xtest, ytest = map(atype, [Array(x[shuffled[1:splits], 1:end-1])', Array(x[shuffled[1:splits], end:end])']);
-println("check that both data are of the same distribution")
-println(sum(ytrain) / length(ytrain), sum(ytest) / length(ytest))
+println("# Check that both data are of the same distribution")
+println(sum(ytrain) / length(ytrain), " , ", sum(ytest) / length(ytest))
+println("")
 println("# size of train and test data")
 println(size(xtrain), size(xtest))
+println("")
 # special Knet iterable that treat data in batchesl useful with very big data 
 btrain = minibatch(xtrain, ytrain, 50; shuffle = true);
 # initialize coefficients
 w = map(atype, Any[randn(1, size(xtrain, 1)), zeros(Float32, 1, 1)]);
 println("# accuracy before training; random accuracy")
 println(Accuracy(w, xtest, ytest))
+println("")
 
 # train the model 
 w, Loss = train(w, btrain; epochs = 30, lr = 1e-2);
@@ -111,6 +116,7 @@ draw(PNG("loss_plot.png", 6inch, 5inch), lossPlot)
 println("# accuracy in train and test data")
 println(Accuracy(w, xtrain, ytrain))
 println(Accuracy(w, xtest, ytest))
+println("")
 
 # it's sometimes useful to plot the probabilities the model gives as density plot colored by outcome 
 # to see how well the model separates the classes and at which threshold 
@@ -119,6 +125,7 @@ println(Accuracy(w, xtest, ytest))
 # plot(d, x = :yhat, color = :y, Geom.density, Scale.color_discrete_hue)
 
 println("############### Decision Tree ####################")
+println("")
 using DecisionTree
 # prepare data 
 trfeatures = float.(xtrain');
@@ -130,18 +137,20 @@ model = DecisionTreeClassifier(max_depth = 2)
 fit!(model, trfeatures, trlabels[:, 1]) 
 println("# Model Classes")
 println(get_classes(model))
+println("")
 # predict on test data
 TreePred = [DecisionTree.predict(model, tsfeatures[i, :]) for i in 1:size(tsfeatures, 1)];
 println("# Model accuracy on test data")
 println(sum(TreePred .== tslabels) / length(tslabels))
+println("")
 # get the probability of each label
-predProb = [DecisionTree.predict_proba(model, trfeatures[i, :])[2] for i in 1:size(trfeatures, 1)];
+# predProb = [DecisionTree.predict_proba(model, trfeatures[i, :])[2] for i in 1:size(trfeatures, 1)];
 
 # Random Forest using 7 random features, 10 trees, 0.9 portion of samples per tree, and a maximum tree depth of 6
-model = DecisionTree.build_forest(trlabels[:, 1], trfeatures, 2, 10, 0.5, 6)
+# model = DecisionTree.build_forest(trlabels[:, 1], trfeatures, 2, 10, 0.5, 6)
 # predict labels and examine accuracy on test data
-forestPred = [apply_forest(model, tsfeatures[i, :]) for i in 1:size(tsfeatures, 1)];
-sum(forestPred .== tslabels) / length(tslabels)
+# forestPred = [apply_forest(model, tsfeatures[i, :]) for i in 1:size(tsfeatures, 1)];
+# sum(forestPred .== tslabels) / length(tslabels)
 # get the probability of each label
-forestProb = [apply_forest_proba(model, tsfeatures[i, :], ["0.0", "1.0"]) for i in 1:size(tsfeatures, 1)];
+# forestProb = [apply_forest_proba(model, tsfeatures[i, :], ["0.0", "1.0"]) for i in 1:size(tsfeatures, 1)];
 

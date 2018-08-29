@@ -52,6 +52,8 @@ $ julia Classifiers_Script.jl
 # accuracy before training; random accuracy
 0.2354368932038835
 
+# N.B. a loss plot has been saved into your directory
+
 # accuracy in train and test data
 1.0
 1.0

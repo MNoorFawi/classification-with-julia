@@ -1,11 +1,12 @@
 
-using Knet, RDatasets, DataFrames, Gadfly
+using Knet, RDatasets, DataFrames, Gadfly, Cairo
 
 # read data
 data = readtable("bank-additional.csv", separator = ';');
-describe(data)
+println("# Data Description")
+println(describe(data))
 
-########## Knet Logistic Regression ##############
+println("########## Knet Logistic Regression ##############")
 atype = Array{Float32}; # atype = KnetArray{Float32} for gpu usage, Array{Float32} for cpu. 
 
 # there are lots of String and Number columns that need to be encoded 
@@ -50,8 +51,8 @@ end
 # then we combine everything together 
 x = hcat(x, d); 
 x[:y] = map(Float64, data[:, :y] .== "yes");
-
-size(x)
+println("# Encoded data size")
+println(size(x))
 
 # then we define our model;
 # the model equation
@@ -90,25 +91,26 @@ splits = round(Int, 0.1 * size(x, 1));
 shuffled = randperm(size(x, 1));
 xtrain, ytrain = map(atype, [Array(x[shuffled[splits + 1:end], 1:end-1])', Array(x[shuffled[splits + 1:end], end:end])']);
 xtest, ytest = map(atype, [Array(x[shuffled[1:splits], 1:end-1])', Array(x[shuffled[1:splits], end:end])']);
-# check that both data are of the same distribution
-sum(ytrain) / length(ytrain), sum(ytest) / length(ytest)
-# size of each one
-size(xtrain), size(xtest)
+println("check that both data are of the same distribution")
+println(sum(ytrain) / length(ytrain), sum(ytest) / length(ytest))
+println("# size of train and test data")
+println(size(xtrain), size(xtest))
 # special Knet iterable that treat data in batchesl useful with very big data 
 btrain = minibatch(xtrain, ytrain, 50; shuffle = true);
 # initialize coefficients
 w = map(atype, Any[randn(1, size(xtrain, 1)), zeros(Float32, 1, 1)]);
-# accuracy before training; random accuracy 
-Accuracy(w, xtest, ytest)
+println("# accuracy before training; random accuracy")
+println(Accuracy(w, xtest, ytest))
 
 # train the model 
 w, Loss = train(w, btrain; epochs = 30, lr = 1e-2);
 # plot how the Loss has been decreasing 
 d = DataFrame(epoch = [i for i in 1:length(Loss)], loss = Loss);
-plot(d, x = :epoch, y = :loss, Geom.point, Scale.y_continuous(minvalue = minimum(Loss), maxvalue = maximum(Loss)))
-# accuracy in train and test data
-Accuracy(w, xtrain, ytrain)
-Accuracy(w, xtest, ytest)
+lossPlot = plot(d, x = :epoch, y = :loss, Geom.point, Scale.y_continuous(minvalue = minimum(Loss), maxvalue = maximum(Loss)))
+draw(PNG("loss_plot.png", 6inch, 5inch), lossPlot)
+println("# accuracy in train and test data")
+println(Accuracy(w, xtrain, ytrain))
+println(Accuracy(w, xtest, ytest))
 
 # it's sometimes useful to plot the probabilities the model gives as density plot colored by outcome 
 # to see how well the model separates the classes and at which threshold 
@@ -116,7 +118,7 @@ Accuracy(w, xtest, ytest)
 # d = DataFrame(yhat = sigm.(w[1] * xtest .+ w[2])[1, :], y = ytest[1, :])
 # plot(d, x = :yhat, color = :y, Geom.density, Scale.color_discrete_hue)
 
-############### Decision Tree ####################
+println("############### Decision Tree ####################")
 using DecisionTree
 # prepare data 
 trfeatures = float.(xtrain');
@@ -126,11 +128,12 @@ tslabels   = string.(ytest');
 # define the model and fit it 
 model = DecisionTreeClassifier(max_depth = 2)
 fit!(model, trfeatures, trlabels[:, 1]) 
+println("# Model Classes")
 println(get_classes(model))
 # predict on test data
 TreePred = [DecisionTree.predict(model, tsfeatures[i, :]) for i in 1:size(tsfeatures, 1)];
-# measure accuracy on test data
-sum(TreePred .== tslabels) / length(tslabels)
+println("# Model accuracy on test data")
+println(sum(TreePred .== tslabels) / length(tslabels))
 # get the probability of each label
 predProb = [DecisionTree.predict_proba(model, trfeatures[i, :])[2] for i in 1:size(trfeatures, 1)];
 

@@ -120,12 +120,6 @@ println(Accuracy(w, xtrain, ytrain))
 println(Accuracy(w, xtest, ytest))
 println("")
 
-# it's sometimes useful to plot the probabilities the model gives as density plot colored by outcome 
-# to see how well the model separates the classes and at which threshold 
-
-# d = DataFrame(yhat = sigm.(w[1] * xtest .+ w[2])[1, :], y = ytest[1, :])
-# plot(d, x = :yhat, color = :y, Geom.density, Scale.color_discrete_hue)
-
 println("############### Decision Tree ####################")
 println("")
 using DecisionTree
@@ -146,7 +140,7 @@ println("# Model accuracy on test data")
 println(sum(TreePred .== tslabels) / length(tslabels))
 println("")
 # get the probability of each label
-# predProb = [DecisionTree.predict_proba(model, trfeatures[i, :])[2] for i in 1:size(trfeatures, 1)];
+# predProb = [DecisionTree.predict_proba(model, tsfeatures[i, :])[2] for i in 1:size(tsfeatures, 1)];
 
 println("######### Random Forest #########")
 println("")
@@ -158,4 +152,17 @@ println("# Model accuracy on test data")
 println(sum(forestPred .== tslabels) / length(tslabels))
 # get the probability of each label
 # forestProb = [apply_forest_proba(model, tsfeatures[i, :], ["0.0", "1.0"]) for i in 1:size(tsfeatures, 1)];
+
+############ NOTES ############
+
+# it's sometimes useful to plot the probabilities the model gives as density plot colored by outcome 
+# to see how well the model separates the classes and at which threshold 
+
+# d = DataFrame(yhat = sigm.(w[1] * xtest .+ w[2])[1, :], ytree = predProb, 
+#               yforest = [forestProb[i][2] for i in 1:size(forestProb, 1)], y = ytest[1, :]);
+#set_default_plot_size(30cm, 15cm)
+# glm = plot(d, x = :yhat, color = :y, Geom.density, Scale.color_discrete_hue);
+# tree = plot(d, x = :ytree, color = :y, Geom.density, Scale.color_discrete_hue);
+# forest = plot(d, x = :yforest, color = :y, Geom.density, Scale.color_discrete_hue);
+# hstack(glm, tree, forest)
 

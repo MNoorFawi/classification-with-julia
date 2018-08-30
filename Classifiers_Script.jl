@@ -1,5 +1,5 @@
 
-using Knet, RDatasets, DataFrames, Gadfly, Cairo
+using Knet, DataFrames, Gadfly, Cairo
 
 # read data
 data = readtable("bank-additional.csv", separator = ';');

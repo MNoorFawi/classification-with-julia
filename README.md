@@ -41,13 +41,13 @@ $ julia Classifiers_Script.jl
 ########## Knet Logistic Regression ##############
 
 # Encoded data size
-(4119, 66)
+(4119, 64)
 
 # Check that both data are of the same distribution
-0.11087132 , 0.097087376
+0.108983 , 0.11407767
 
 # size of train and test data
-(65, 3707)(65, 412)
+(63, 3707)(63, 412)
 
 # accuracy before training; random accuracy
 0.2354368932038835
@@ -55,8 +55,8 @@ $ julia Classifiers_Script.jl
 # N.B. a loss plot has been saved into your directory
 
 # accuracy in train and test data
-1.0
-1.0
+0.9082816293498787
+0.8956310679611651
 
 ############### Decision Tree ####################
 
@@ -64,11 +64,11 @@ $ julia Classifiers_Script.jl
 String["0.0", "1.0"]
 
 # Model accuracy on test data
-1.0
+0.9101941747572816
 
 ######### Random Forest #########
 
 # Random Forest using 5 random features, 10 trees, 0.7 portion of samples per tree, and a maximum tree depth of 6
 # Model accuracy on test data
-0.9757281553398058
+0.9004854368932039
 ```

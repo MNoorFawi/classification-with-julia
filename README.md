@@ -5,6 +5,7 @@ We will be using the Bank Marketing dataset at https://archive.ics.uci.edu/ml/da
 We will apply three different classifiers using **Julia** programming language.
 
 The classifiers we will fit are; **Logistic Regression** from **Knet** package, and **Decision Tree** and **Random Forest** from **DecisionTree** package ...
+###### N.B. we'll be using Julia version 0.6.4
 
 ``` bash
 # run the script from command line

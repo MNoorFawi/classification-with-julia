@@ -8,6 +8,7 @@ println(describe(data))
 
 println("########## Knet Logistic Regression ##############")
 println("")
+# Knet.gpu(0); to set the gpu to use
 atype = Array{Float32}; # atype = KnetArray{Float32} for gpu usage, Array{Float32} for cpu. 
 
 # there are lots of String and Number columns that need to be encoded 
@@ -32,6 +33,15 @@ for i in str
 		x[:, [Symbol(key .* "_" .* String(i))]] = 1.0(data[:, i] .== key)
 	end
 end
+# to encode new data in production which may not contain all the categories
+# dataType = describe(old);
+# str = dataType[dataType[:eltype] .== String, :variable];
+# for i in str
+# 	 dict = unique(old[:, i])
+#	 for key in dict
+#		 x[:, [Symbol(key .* "_" .* String(i))]] = 1.0(new[:, i] .== key)
+#	 end
+# end
 
 # we scale the Number columns except for the y variable 
 num2 = setdiff(num, [:y]);

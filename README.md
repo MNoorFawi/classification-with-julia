@@ -7,7 +7,7 @@ We will apply three different classifiers using **Julia** programming language.
 The classifiers we will fit are; **Logistic Regression** from **Knet** package, and **Decision Tree** and **Random Forest** from **DecisionTree** package ...
 ###### N.B. we'll be using Julia version 0.6.4
 
-``` bash
+``` r
 # run the script from command line
 
 $ julia Classifiers_Script.jl

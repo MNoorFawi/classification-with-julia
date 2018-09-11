@@ -3,6 +3,7 @@ using Knet, DataFrames, Gadfly, Cairo
 
 # read data
 data = readtable("bank-additional.csv", separator = ';');
+# or with CSV.read from CSV (using CSV; CSV.read("file"))
 println("# Data Description")
 println(describe(data))
 

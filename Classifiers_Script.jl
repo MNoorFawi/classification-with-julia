@@ -113,7 +113,7 @@ println("")
 # special Knet iterable that treat data in batchesl useful with very big data 
 btrain = minibatch(xtrain, ytrain, 50; shuffle = true);
 # initialize coefficients
-w = map(atype, Any[randn(1, size(xtrain, 1)), zeros(Float32, 1, 1)]);
+w = map(atype, Any[randn(1, size(xtrain, 1)), zeros(1, 1)]);
 println("# accuracy before training; random accuracy")
 println(Accuracy(w, xtest, ytest))
 println("")
